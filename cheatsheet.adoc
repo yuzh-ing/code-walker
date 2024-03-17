@@ -1,0 +1,34 @@
+:stem: latexmath
+:icons: font
+:source-highlighter: coderay
+:sectnums:
+:sectlinks:
+:sectnumlevels: 4
+:toc: left
+:toc-title: 目录
+:toclevels: 3
+
+[TIP]
+====
+https://github.com/asciidocfx/AsciidocFX[GitHub]
+
+https://docs.asciidoctor.org/[Docs]
+====
+
+== plantuml
+
+[NOTE]
+====
+https://plantuml.com/zh/[官方文档]
+====
+
+=== 示例
+[plantuml,target='plantuml_example']
+--
+@startuml
+class "This is my class" as class1
+class class2 as "It works this way too"
+
+class2 *-- "foo/dummy" : use
+@enduml
+--

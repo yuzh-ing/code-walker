@@ -1,0 +1,122 @@
+:stem: latexmath
+:icons: font
+:source-highlighter: coderay
+:sectnums:
+:sectlinks:
+:sectnumlevels: 4
+:toc: left
+:toc-title: 目录
+:toclevels: 3
+
+== VM许可证
+
+[NOTE]
+====
+JU090-6039P-08409-8J0QH-2YR7F
+====
+
+
+== 设置静态IP
+
+https://baijiahao.baidu.com/s?id=1659571844291911748&wfr=spider&for=pc
+
+
+== 设置共享目录
+
+** mount -t fuse.vmhgfs-fuse .host:/ /mnt/hgfs -o allow_other
+
+
+== 安装docker
+
+=== 前置
+[source,txt]
+----
+-- 卸载老版本docker
+yum remove docker \
+   docker-client \
+   docker-client-latest \
+   docker-common \
+   docker-latest \
+   docker-latest-logrotate \
+   docker-logrotate \
+   docker-selinux \
+   docker-engine-selinux \
+   docker-engine \
+   docker-ce
+   
+-- 安装yum
+yum install -y yum-utils \
+   device-mapper-persistent-data \
+   lvm2 --skip-broken
+   
+-- 设置镜像源
+yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+ 
+-- 将docker-ce.repo中所有的 "download.docker.com" 替换成 "mirrors.aliyun.com/docker-ce"
+sed -i 's/download.docker.com/mirrors.aliyun.com/docker-ce/g' /etc/yum.repos.d/docker-ce.repo
+
+-- 建立元数据缓存
+yum makecache fast
+
+-- 关闭防火墙
+systemctl stop firewalld
+-- 禁止开机启动防火墙
+systemctl disable firewalld
+-- 查看防火墙状态
+systemctl status firewalld
+----
+
+=== 安装
+
+[source,txt]
+----
+yum install -y docker-ce
+
+-- 启动docker服务
+systemctl start docker
+-- 设置docker开机自启
+chkconfig docker on
+
+-- 查看docker版本
+docker -v
+
+-- 修改docker镜像地址
+-- 创建文件夹
+mkdir -p /etc/docker
+-- 在文件夹内新建一个daemon.json文件，并写入镜像配置
+tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://akchsmlh.mirror.aliyuncs.com"]
+}
+EOF
+-- 重新加载文件
+systemctl daemon-reload
+-- 重启docker
+systemctl restart docker
+----
+
+=== 相关命令
+[source,shell]
+----
+-- 启动docker服务
+systemctl start docker
+-- 停止docker服务
+systemctl stop docker
+-- 重启docker服务
+systemctl restart docker
+----
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
