@@ -1,0 +1,186 @@
+== BeanFactory
+
+[plantuml,spring-framework-context-beanfactory.png]
+--
+interface BeanFactory {
+    T getBean(String name, Class<T> requiredType);
+}
+
+interface HierarchicalBeanFactory {
+}
+interface SingletonBeanRegistry {
+}
+
+interface ConfigurableBeanFactory {
+    void setConversionService(ConversionService conversionService);
+    ConversionService getConversionService();
+    void setTypeConverter(TypeConverter typeConverter);
+    TypeConverter getTypeConverter();
+    void addBeanPostProcessor(BeanPostProcessor beanPostProcessor);
+    void registerScope(String scopeName, Scope scope);
+    BeanDefinition getMergedBeanDefinition(String beanName);
+}
+
+interface ListableBeanFactory {
+    Map<String, T> getBeansOfType(Class<T> type);
+    Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType)
+}
+interface HierarchicalBeanFactory {
+    BeanFactory getParentBeanFactory();
+    boolean containsLocalBean(String name);
+}
+interface AutowireCapableBeanFactory {
+    void autowireBean(Object existingBean);
+    Object autowire(Class<?> beanClass, int autowireMode, boolean dependencyCheck);
+    Object resolveDependency(DependencyDescriptor descriptor, String requestingBeanName)
+}
+interface ConfigurableListableBeanFactory {
+
+}
+
+BeanFactory <|-- HierarchicalBeanFactory
+
+HierarchicalBeanFactory <|-- ConfigurableBeanFactory
+SingletonBeanRegistry <|-- ConfigurableBeanFactory
+
+ConfigurableBeanFactory <|-- ConfigurableListableBeanFactory
+ListableBeanFactory <|-- ConfigurableListableBeanFactory
+AutowireCapableBeanFactory <|-- ConfigurableListableBeanFactory
+BeanFactory <|-- ListableBeanFactory
+
+BeanFactory <|-- AutowireCapableBeanFactory
+--
+
+== ApplicationContext
+
+[plantuml,spring-framework-context-applicationcontext.png]
+--
+@startuml
+interface ResourceLoader {
+    Resource getResource(String location);
+    ClassLoader getClassLoader();
+}
+class DefaultResourceLoader {
+    private Set<ProtocolResolver> protocolResolvers;
+}
+
+interface BeanFactory {
+}
+interface ListableBeanFactory {
+}
+interface HierarchicalBeanFactory {
+}
+interface ApplicationContext {
+    AutowireCapableBeanFactory getAutowireCapableBeanFactory();
+}
+interface Lifecycle {
+}
+interface Closeable {
+}
+interface ConfigurableApplicationContext {
+    void addBeanFactoryPostProcessor(BeanFactoryPostProcessor postProcessor);
+    void addApplicationListener(ApplicationListener<?> listener);
+    void addProtocolResolver(ProtocolResolver resolver);
+}
+abstract class AbstractApplicationContext {
+    private ApplicationContext parent;
+}
+
+interface BeanDefinitionRegistry {
+    void registerBeanDefinition(String beanName, BeanDefinition beanDefinition);
+}
+class GenericApplicationContext {
+    private DefaultListableBeanFactory beanFactory;
+    ConfigurableListableBeanFactory getBeanFactory();
+}
+
+interface AnnotationConfigRegistry {
+    void register(Class<?>... componentClasses);
+    void scan(String... basePackages);
+}
+class AnnotationConfigApplicationContext {
+    private AnnotatedBeanDefinitionReader reader;
+    private ClassPathBeanDefinitionScanner scanner;
+}
+
+ResourceLoader <|.. DefaultResourceLoader
+
+DefaultResourceLoader <|-- AbstractApplicationContext
+ConfigurableApplicationContext <|.. AbstractApplicationContext
+ApplicationContext <|-- ConfigurableApplicationContext
+Lifecycle <|-- ConfigurableApplicationContext
+Closeable <|-- ConfigurableApplicationContext
+BeanFactory <|-- ListableBeanFactory
+BeanFactory <|-- HierarchicalBeanFactory
+ListableBeanFactory <|-- ApplicationContext
+HierarchicalBeanFactory <|-- ApplicationContext
+
+AbstractApplicationContext <|-- GenericApplicationContext
+BeanDefinitionRegistry <|.. GenericApplicationContext
+
+GenericApplicationContext <|-- AnnotationConfigApplicationContext
+AnnotationConfigRegistry <|.. AnnotationConfigApplicationContext
+@enduml
+--
+
+== MessageSource
+
+=== 基础
+
+[plantuml,jdk-resourcebundle.png]
+--
+@startuml
+class ResourceBundle {
+    public static ResourceBundle getBundle(String baseName, Locale targetLocale, ClassLoader loader, Control control);
+}
+@enduml
+--
+
+==== 类图
+
+[plantuml,spring-framework-context-messagesource.png]
+--
+@startuml
+interface MessageSource {
+    String getMessage(String code, Object[] args, String defaultMessage, Locale locale);
+    String getMessage(String code, Object[] args, Locale locale) throws NoSuchMessageException;
+    String getMessage(MessageSourceResolvable resolvable, Locale locale) throws NoSuchMessageException;
+}
+interface HierarchicalMessageSource {
+    void setParentMessageSource(MessageSource parent);
+    MessageSource getParentMessageSource();
+}
+class MessageSourceSupport {
+    private final Map<String, Map<Locale, MessageFormat>> messageFormatsPerMessage;
+}
+
+class AbstractMessageSource {
+    private MessageSource parentMessageSource;
+    private Properties commonMessages;
+}
+class AbstractResourceBasedMessageSource {
+    private final Set<String> basenameSet;
+    private Locale defaultLocale;
+}
+
+class ResourceBundleMessageSource {
+    private final Map<String, Map<Locale, ResourceBundle>> cachedResourceBundles;
+    private final Map<ResourceBundle, Map<String, Map<Locale, MessageFormat>>> cachedBundleMessageFormats;
+}
+class ReloadableResourceBundleMessageSource {
+    public static ResourceBundle getBundle(String baseName, Locale targetLocale, ClassLoader loader, Control control) 
+}
+
+MessageSource <|-- HierarchicalMessageSource
+HierarchicalMessageSource <|.. AbstractMessageSource
+MessageSourceSupport <|-- AbstractMessageSource
+AbstractMessageSource <|-- AbstractResourceBasedMessageSource
+
+AbstractResourceBasedMessageSource <|-- ResourceBundleMessageSource
+AbstractResourceBasedMessageSource <|-- ReloadableResourceBundleMessageSource
+@enduml
+--
+
+==== 应用
+
+* SpringBoot整合：见 MessageSourceAutoConfiguration 配置类

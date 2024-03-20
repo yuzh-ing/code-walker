@@ -1,0 +1,62 @@
+== TypeDescriptor&ResolvableType
+
+==== 基础
+
+[plantuml,jdk-type.png]
+--
+@startuml
+interface Type {
+}
+class Class<T> {
+}
+interface GenericArrayType {
+    Type getGenericComponentType();
+}
+interface ParameterizedType {
+    Type[] getActualTypeArguments();
+    Type getRawType();
+    Type getOwnerType();
+}
+interface TypeVariable {
+    Type[] getBounds();
+    D getGenericDeclaration();
+    String getName();
+    AnnotatedType[] getAnnotatedBounds();
+}
+interface WildcardType {
+    Type[] getUpperBounds();
+    Type[] getLowerBounds();
+}
+
+
+Type <|-- GenericArrayType
+Type <|-- ParameterizedType
+Type <|-- TypeVariable
+Type <|-- WildcardType
+
+Type <|.. Class
+@enduml
+--
+
+==== 类图
+
+[plantuml,spring-framework-core-resolvabletype.png]
+--
+@startuml
+class TypeDescriptor {
+    private final Class<?> type;
+	private final ResolvableType resolvableType;
+	private final AnnotatedElementAdapter annotatedElement;
+}
+class ResolvableType {
+    private final Type type;
+    private Class<?> resolved;
+}
+
+TypeDescriptor --> ResolvableType
+@enduml
+--
+
+* ResolvableType是对Class的封装，支持访问其父类、泛型
+* TypeDescriptor依赖了ResolvableType，多了注解的能力
+

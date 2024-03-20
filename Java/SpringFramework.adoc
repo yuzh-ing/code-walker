@@ -1,0 +1,130 @@
+:stem: latexmath
+:icons: font
+:source-highlighter: coderay
+:sectnums:
+:sectlinks:
+:sectnumlevels: 4
+:toc: left
+:toc-title: 目录
+:toclevels: 3
+
+[NOTE]
+====
+spring-framework.version=5.3.30
+====
+
+
+= overview
+
+[plantuml,spring-framework-overview-core.png]
+--
+@startwbs
++ spring-framework
+++ spring-core
++++ spring-jcl
+++ spring-aop
++++ spring-beans
++++ spring-core
+++ spring-beans
++++ spring-core
+++ spring-context
++++ spring-core
++++ spring-aop
++++ spring-beans
++++ spring-expression
++++ spring-tx
+++ spring-oxm
++++ spring-core
++++ spring-beans
+@endwbs
+--
+
+[plantuml,spring-framework-overview-dataaccess.png]
+--
+@startwbs
++ spring-framework
+++ spring-tx
++++ spring-core
++++ spring-beans
+++ spring-jdbc
++++ spring-core
++++ spring-beans
+@endwbs
+--
+
+[plantuml,spring-framework-overview-web.png]
+--
+@startwbs
++ spring-framework
+++ spring-web
++++ spring-core
++++ spring-beans
+++ spring-webmvc
++++ spring-core
++++ spring-beans
++++ spring-context
++++ spring-aop
++++ spring-expression
++++ spring-web
+@endwbs
+--
+
+[plantuml,spring-framework-overview-other.png]
+--
+@startwbs
++ spring-framework
+++ spring-expression
++++ spring-core
+@endwbs
+--
+
+
+= spring-beans
+
+include::springframework/beans/spring-beans.adoc[]
+
+
+= spring-context
+
+include::springframework/context/spring-context.adoc[]
+
+
+= spring-aop
+
+include::springframework/aop/spring-aop.adoc[]
+
+
+= spring-tx
+
+include::springframework/tx/spring-tx.adoc[]
+
+
+= spring-core
+
+include::springframework/core/spring-core.adoc[]
+
+
+= spring-web
+
+include::springframework/web/spring-web.adoc[]
+
+
+= spring-webmvc
+
+include::springframework/webmvc/spring-webmvc.adoc[]
+
+
+= spring-expression
+
+include::springframework/expression/spring-expression.adoc[]
+
+
+= spring-aswsome
+
+include::springframework/awesome/spring-awesome.adoc[]
+
+
+
+
+
+
