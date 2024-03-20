@@ -105,10 +105,9 @@ For more help on how to use Docker, head to https://docs.docker.com/go/guides/
 ----
 docker run -p 3306:3306 --name mysql --restart=always --privileged=true \
 -e MYSQL_ROOT_PASSWORD=123456 \
+-e lower_case_table_names=1 \
 -v /var/lib/mysql/log:/var/log/mysql \
 -v /var/lib/mysql/data:/var/lib/mysql \
--v /var/lib/mysql/conf/my.cnf:/etc/mysql/my.cnf:ro \
--v /etc/localtime:/etc/localtime:ro \
 -d mysql:8.0
 ----
 
